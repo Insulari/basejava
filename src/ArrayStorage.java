@@ -6,39 +6,34 @@ public class ArrayStorage {
     private int size = 0;
 
     void clear() {
-        size = 0;
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) break;
+        for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
+        size = 0;
     }
 
     void save(Resume r) {
         if (size < storage.length) {
             storage[size] = r;
             size++;
-        } else System.out.println("Not enough array length for saving resume");
+        } else System.out.println("Not enough array length for saving resume.");
     }
 
     Resume get(String uuid) {
-        try {
-            for (Resume r : storage) {
-                if (uuid.equals(r.uuid)) {
-                    return r;
-                }
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].uuid)) {
+                return storage[i];
             }
-        } catch (NullPointerException e) {
-            System.out.println("Резюме \"" + uuid + "\" не найдено.");
-            return null;
         }
         return null;
     }
 
     void delete(String uuid) {
-        if (size == 0) System.out.println("Операция не выполнена. Нет элементов для удаления.");
         for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].uuid)) {
-                if (i != (size - 1)) storage[i] = storage[size - 1];
+                if (i != (size - 1)) {
+                    storage[i] = storage[size - 1];
+                }
                 storage[size - 1] = null;
                 size--;
                 break;
