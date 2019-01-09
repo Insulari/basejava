@@ -3,8 +3,10 @@
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    private int size = 0;
 
     void clear() {
+        size = 0;
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) break;
             storage[i] = null;
@@ -12,18 +14,10 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
-        int i = 0;
-        while (i < storage.length) {
-            if (storage[i] == null) {
-                storage[i] = r;
-                break;
-            }
-            if (i == (storage.length - 1)) {
-                // Should I throw new exception here?
-                System.out.println("not enough array length for saving resume");
-            }
-            i++;
-        }
+        if (size < storage.length) {
+            storage[size] = r;
+            size++;
+        } else System.out.println("Not enough array length for saving resume");
     }
 
     Resume get(String uuid) {
@@ -41,36 +35,14 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        int id = 0;
-        try {
-            for (int i = 0; i < storage.length; i++) {
-                if (uuid.equals(storage[i].uuid)) {
-                    storage[i] = null;
-                    id = i;
-                    break;
-                }
-            }
-        } catch (NullPointerException e) {
-            System.out.println("Резюме \"" + uuid + "\" не найдено.");
-        }
-        // перемещаем последний элемент массива в "дырку".
-        int i = id + 1;
-        while (i < storage.length) {
-            // если был удалён последний элемент массива storage, цикл не выполнится. Всё ОК.
-            // доходим до первого нулевого элемента и перемещаем в дырку предшествующий ему элемент
-            if (storage[i] == null) {
-                if (storage[i-1] == null) break;    // исключает r = r в следующей строке. Если удалили последний инициализированный элемент - уходим.
-                storage[id] = storage[i-1];
-                storage[i-1] = null;
+        if (size == 0) System.out.println("Операция не выполнена. Нет элементов для удаления.");
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].uuid)) {
+                if (i != (size - 1)) storage[i] = storage[size - 1];
+                storage[size - 1] = null;
+                size--;
                 break;
-            }
-            // если дошли до последнего элемента, его в дырку. Проверка на ноль уже была.
-            if (i == (storage.length - 1)) {
-                storage[id] = storage[i];
-                storage [i] = null;
-                break;
-            }
-            i++;
+            } else System.out.println("Резюме \"" + uuid + "\" не найдено.");
         }
     }
 
@@ -78,7 +50,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        int size = 0;
+
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
                 size = i;
@@ -91,9 +63,6 @@ public class ArrayStorage {
     }
 
     int size() {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) return i;
-        }
-        return 0;
+        return size;
     }
 }
