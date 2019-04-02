@@ -39,11 +39,12 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        if (check(uuid) < 0) {
+        int ch = check(uuid);
+        if (ch < 0) {
             System.out.println("ERROR: Unknown uuid!");
             return null;
         }
-        return storage[check(uuid)];
+        return storage[ch];
     }
 
     public void delete(String uuid) {
