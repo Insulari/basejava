@@ -7,8 +7,8 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void add(Resume r, int check) {
-        int index = - check - 1;      // sorted insertion place
+    protected void addPos(Resume r, int binarySearchIndex) {
+        int index = -binarySearchIndex - 1;      // sorted insertion place
         if (index < size) {
             System.arraycopy(storage, index, storage, index + 1, size - index);
         }

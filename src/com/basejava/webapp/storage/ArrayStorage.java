@@ -7,16 +7,14 @@ import com.basejava.webapp.model.Resume;
  */
 public class ArrayStorage extends AbstractArrayStorage {
 
-   @Override
-    protected void add(Resume r, int i) {
+    @Override
+    protected void addPos(Resume r, int i) {
         storage[size] = r;
     }
 
     @Override
     protected void shiftPos(int index) {
-        if (index != (size - 1)) {
-            storage[index] = storage[size - 1];
-        }
+        storage[index] = storage[size - 1];
     }
 
     @Override

@@ -18,51 +18,47 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     public void update(Resume r) {
-        int ch = getIndex(r.getUuid());
-        if (ch < 0) {
+        int index = getIndex(r.getUuid());
+        if (index < 0) {
             System.out.println("ERROR: Update fail! " +
                                "Couldn't find resume \"" + r + "\"!");
         } else {
-            storage[ch] = r;
+            storage[index] = r;
         }
     }
 
     public void save(Resume r) {
-        int i = getIndex(r.getUuid());
-        if (i >= 0) {
+        int index = getIndex(r.getUuid());
+        if (index >= 0) {
             System.out.println("WARNING: Resume \"" + r + "\" already exists!");
         } else if (size == STORAGE_LIMIT) {
             System.out.println("ERROR: Not enough array length " +
                                "for saving resume!");
         } else {
-            add(r, i);
+            addPos(r, index);
             size++;
         }
     }
 
-    protected abstract void add(Resume r, int binarySearch);
-
     public Resume get(String uuid) {
-        int ch = getIndex(uuid);
-        if (ch < 0) {
+        int index = getIndex(uuid);
+        if (index < 0) {
             System.out.println("ERROR: Unknown uuid!");
             return null;
         }
-        return storage[ch];
+        return storage[index];
     }
 
     public void delete(String uuid) {
-        int i = getIndex(uuid);
-        if (i < 0) {
+        int index = getIndex(uuid);
+        if (index < 0) {
             System.out.println("ERROR: Couldn't find resume \"" + uuid + "\"!");
-        } else {
-            shiftPos(i);
+        } else if (index != (size - 1)){
+            shiftPos(index);
         }
         storage[size - 1] = null;
         size--;
     }
-
-    protected abstract void shiftPos(int index);
 
     /**
      * @return array, contains only Resumes in storage (without null)
@@ -76,6 +72,10 @@ public abstract class AbstractArrayStorage implements Storage {
     public int size() {
         return size;
     }
+
+    protected abstract void addPos(Resume r, int binarySearchIndex);
+
+    protected abstract void shiftPos(int index);
 
     protected abstract int getIndex(String uuid);
 }
