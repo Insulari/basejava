@@ -8,7 +8,7 @@ import com.basejava.webapp.model.Resume;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected void addPos(Resume r, int i) {
+    protected void addPos(Resume r, int binarySearchIndex) {
         storage[size] = r;
     }
 

@@ -1,5 +1,6 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.exception.*;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -20,8 +21,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void update(Resume r) {
         int index = getIndex(r.getUuid());
         if (index < 0) {
-            System.out.println("ERROR: Update fail! " +
-                               "Couldn't find resume \"" + r + "\"!");
+            throw new NotExistStorageException(r.getUuid());
         } else {
             storage[index] = r;
         }
@@ -30,10 +30,10 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume r) {
         int index = getIndex(r.getUuid());
         if (index >= 0) {
-            System.out.println("WARNING: Resume \"" + r + "\" already exists!");
+            throw new ExistStorageException(r.getUuid());
         } else if (size == STORAGE_LIMIT) {
-            System.out.println("ERROR: Not enough array length " +
-                               "for saving resume!");
+            throw new StorageException("ERROR: Not enough array length " +
+                                       "for saving resume!", r.getUuid());
         } else {
             addPos(r, index);
             size++;
@@ -43,8 +43,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("ERROR: Unknown uuid!");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -52,8 +51,8 @@ public abstract class AbstractArrayStorage implements Storage {
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("ERROR: Couldn't find resume \"" + uuid + "\"!");
-        } else if (index != (size - 1)){
+            throw new NotExistStorageException(uuid);
+        } else if (index != (size - 1)) {
             shiftPos(index);
         }
         storage[size - 1] = null;
