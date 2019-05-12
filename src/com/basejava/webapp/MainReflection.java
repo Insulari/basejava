@@ -20,7 +20,7 @@ public class MainReflection {
         field.set(r, "new uuid");
 
         // HW4
-        Method method = Class.forName(rClass.getName()).getMethod("toString");
+        Method method = rClass.getMethod("toString");
         System.out.println("Reflection r.toString: " + method.invoke(r));
     }
 }
