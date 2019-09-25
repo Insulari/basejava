@@ -8,7 +8,7 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10_000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
@@ -18,41 +18,30 @@ public abstract class AbstractArrayStorage implements Storage {
         size = 0;
     }
 
-    public void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        } else {
-            storage[index] = r;
-        }
+    @Override
+    protected void replaceElement(Resume r, int index) {
+        storage[index] = r;
     }
 
-    public void save(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(r.getUuid());
-        } else if (size == STORAGE_LIMIT) {
+    @Override
+    protected void insertElement(Resume r, int index) {
+        if (size == STORAGE_LIMIT) {
             throw new StorageException("ERROR: Not enough array length " +
-                                       "for saving resume!", r.getUuid());
+                    "for saving resume!", r.getUuid());
         } else {
             addPos(r, index);
             size++;
         }
     }
 
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
+    @Override
+    protected Resume getElement(int index) {
         return storage[index];
     }
 
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else if (index != (size - 1)) {
+    @Override
+    protected void removeElement(int index) {
+        if (index != (size - 1)) {
             shiftPos(index);
         }
         storage[size - 1] = null;

@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 
 public class MainReflection {
     public static void main(String[] args) throws IllegalAccessException,
-            ClassNotFoundException,
             NoSuchMethodException,
             InvocationTargetException {
         Resume r = new Resume();
