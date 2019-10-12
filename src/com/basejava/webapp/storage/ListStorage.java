@@ -15,29 +15,36 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void replaceElement(Resume r, int index) {
+    protected void updateElement(Resume r, Object searchKey) {
+        int index = (Integer) searchKey;
         resumeList.set(index, r);
     }
 
     @Override
-    protected void insertElement(Resume r, int index) {
+    protected void saveElement(Resume r, Object searchKey) {
         resumeList.add(r);
     }
 
     @Override
-    protected Resume getElement(int index) {
+    protected Resume getElement(Object searchKey) {
+        int index = (Integer) searchKey;
         return resumeList.get(index);
     }
 
     @Override
-    protected void removeElement(int index) {
+    protected boolean isExist(Object searchKey) {
+        return ((Integer)searchKey >= 0);
+    }
+
+    @Override
+    protected void removeElement(Object searchKey) {
+        int index = (Integer) searchKey;
         resumeList.remove(index);
     }
 
     @Override
     public Resume[] getAll() {
-        Resume[] resumes = new Resume[size()];
-        return resumeList.toArray(resumes);
+        return resumeList.toArray(new Resume[size()]);
     }
 
     @Override
@@ -46,12 +53,12 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected int getIndex(String uuid) {
+    protected Object getSearchKey(String uuid) {
         Iterator<Resume> iterator = resumeList.iterator();
-        int i = 0;
+        Integer i = 0;
         while (iterator.hasNext()) {
             if (iterator.next().getUuid().equals(uuid)) {
-                return i;     // how to get iterator index?
+                return i;
             } else {
                 i++;
             }

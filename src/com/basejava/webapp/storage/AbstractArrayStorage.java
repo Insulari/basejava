@@ -19,30 +19,39 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void replaceElement(Resume r, int index) {
+    protected void updateElement(Resume r, Object searchKey) {
+        int index = (Integer) searchKey;
         storage[index] = r;
     }
 
     @Override
-    protected void insertElement(Resume r, int index) {
+    protected void saveElement(Resume r, Object searchKey) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("ERROR: Not enough array length " +
                     "for saving resume!", r.getUuid());
         } else {
-            addPos(r, index);
+            int index = (Integer) searchKey;
+            insertElement(r, index);
             size++;
         }
     }
 
     @Override
-    protected Resume getElement(int index) {
+    protected Resume getElement(Object searchKey) {
+        int index = (Integer) searchKey;
         return storage[index];
     }
 
     @Override
-    protected void removeElement(int index) {
+    protected boolean isExist(Object searchKey) {
+        return ((Integer) searchKey >= 0);
+    }
+
+    @Override
+    protected void removeElement(Object searchKey) {
+        int index = (Integer) searchKey;
         if (index != (size - 1)) {
-            shiftPos(index);
+            fillDeletedElement(index);
         }
         storage[size - 1] = null;
         size--;
@@ -61,9 +70,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    protected abstract void addPos(Resume r, int binarySearchIndex);
+    protected abstract void insertElement(Resume r, int binarySearchIndex);
 
-    protected abstract void shiftPos(int index);
+    protected abstract void fillDeletedElement(int index);
 
-    protected abstract int getIndex(String uuid);
+    protected abstract Object getSearchKey(String uuid);
 }

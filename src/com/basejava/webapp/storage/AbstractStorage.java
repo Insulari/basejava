@@ -7,45 +7,45 @@ import com.basejava.webapp.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     public void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        } else {
-            replaceElement(r, index);
-        }
+        Object searchKey = getExistedSearchKey(r.getUuid());
+        updateElement(r, searchKey);
     }
 
     public void save(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index >= 0) {
+        Object searchKey = getSearchKey(r.getUuid());
+        if (isExist(searchKey)) {
             throw new ExistStorageException(r.getUuid());
-        } else insertElement(r, index);
+        } else saveElement(r, searchKey);
     }
 
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getElement(index);
+        Object searchKey = getExistedSearchKey(uuid);
+        return getElement(searchKey);
     }
 
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
+        Object searchKey = getExistedSearchKey(uuid);
+        removeElement(searchKey);
+    }
+
+    private Object getExistedSearchKey(String uuid) {
+        Object searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey)) {
             throw new NotExistStorageException(uuid);
         } else {
-            removeElement(index);
+            return searchKey;
         }
     }
 
-    protected abstract void removeElement(int index);
+    protected abstract boolean isExist(Object searchKey);
 
-    protected abstract Resume getElement(int index);
+    protected abstract void removeElement(Object searchKey);
 
-    protected abstract void replaceElement(Resume r, int index);
+    protected abstract Resume getElement(Object searchKey);
 
-    protected abstract void insertElement(Resume r, int index);
+    protected abstract void updateElement(Resume r, Object searchKey);
 
-    protected abstract int getIndex(String uuid);
+    protected abstract void saveElement(Resume r, Object searchKey);
+
+    protected abstract Object getSearchKey(String uuid);
 }

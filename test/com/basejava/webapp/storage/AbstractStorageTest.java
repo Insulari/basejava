@@ -1,9 +1,14 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.*;
+import com.basejava.webapp.exception.ExistStorageException;
+import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.Assert.*;
 
@@ -106,7 +111,8 @@ public abstract class AbstractStorageTest {
         resumes[0] = RESUME1;
         resumes[1] = RESUME2;
         resumes[2] = RESUME3;
-        assertArrayEquals(resumes, storage.getAll());
+        Set<Resume> set = new TreeSet<>(Arrays.asList(storage.getAll()));
+        assertArrayEquals(resumes, set.toArray(new Resume[0]));
         assertSize(3);
     }
 
