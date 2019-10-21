@@ -18,52 +18,45 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
-    @Override
-    protected void updateElement(Resume r, Object searchKey) {
-        int index = (Integer) searchKey;
-        storage[index] = r;
+    public Resume[] getAll() {
+        Resume[] resumes = new Resume[size];
+        System.arraycopy(storage, 0, resumes, 0, size);
+        return resumes;
     }
 
     @Override
-    protected void saveElement(Resume r, Object searchKey) {
+    protected void doSave(Resume r, Object index) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("ERROR: Not enough array length " +
                     "for saving resume!", r.getUuid());
         } else {
-            int index = (Integer) searchKey;
-            insertElement(r, index);
+            insertElement(r, (Integer) index);
             size++;
         }
     }
 
     @Override
-    protected Resume getElement(Object searchKey) {
-        int index = (Integer) searchKey;
-        return storage[index];
-    }
-
-    @Override
-    protected boolean isExist(Object searchKey) {
-        return ((Integer) searchKey >= 0);
-    }
-
-    @Override
-    protected void removeElement(Object searchKey) {
-        int index = (Integer) searchKey;
-        if (index != (size - 1)) {
-            fillDeletedElement(index);
+    protected void doDelete(Object index) {
+        if ((Integer) index != (size - 1)) {
+            fillDeletedElement((Integer) index);
         }
         storage[size - 1] = null;
         size--;
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-    public Resume[] getAll() {
-        Resume[] resumes = new Resume[size];
-        System.arraycopy(storage, 0, resumes, 0, size);
-        return resumes;
+    @Override
+    protected void doUpdate(Resume r, Object index) {
+        storage[(Integer) index] = r;
+    }
+
+    @Override
+    protected Resume doGet(Object index) {
+        return storage[(Integer) index];
+    }
+
+    @Override
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
     }
 
     public int size() {
@@ -74,5 +67,5 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected abstract void fillDeletedElement(int index);
 
-    protected abstract Object getSearchKey(String uuid);
+    protected abstract Integer getSearchKey(String uuid);
 }
