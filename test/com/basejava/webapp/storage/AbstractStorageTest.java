@@ -6,9 +6,7 @@ import com.basejava.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -18,8 +16,11 @@ public abstract class AbstractStorageTest {
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
+    private static final String NAME_1 = "Petr1";
+    private static final String NAME_2 = "Petr2";
+    private static final String NAME_3 = "Petr3";
     private static final String DUMMY = "dummy";
-    private static final String ONE_MORE_UUID = "oneMoreUuid";
+    private static final String ONE_MORE_NAME = "Dummyr";
     private static final Resume RESUME1;
     private static final Resume RESUME2;
     private static final Resume RESUME3;
@@ -27,11 +28,11 @@ public abstract class AbstractStorageTest {
     protected static final Resume ONE_MORE_RESUME;
 
     static {
-        RESUME1 = new Resume(UUID_1);
-        RESUME2 = new Resume(UUID_2);
-        RESUME3 = new Resume(UUID_3);
-        RESUME_DUMMY = new Resume(DUMMY);
-        ONE_MORE_RESUME = new Resume(ONE_MORE_UUID);
+        RESUME1 = new Resume(UUID_1, NAME_1);
+        RESUME2 = new Resume(UUID_2, NAME_2);
+        RESUME3 = new Resume(UUID_3, NAME_3);
+        RESUME_DUMMY = new Resume(DUMMY, NAME_1);
+        ONE_MORE_RESUME = new Resume(ONE_MORE_NAME);
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -54,7 +55,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void updateExist() {
-        Resume newResume = new Resume(UUID_1);
+        Resume newResume = new Resume(UUID_1, "New Name");
         storage.update(newResume);
         assertGet(newResume);
     }
@@ -111,7 +112,8 @@ public abstract class AbstractStorageTest {
         resumes[0] = RESUME1;
         resumes[1] = RESUME2;
         resumes[2] = RESUME3;
-        Set<Resume> set = new TreeSet<>(Arrays.asList(storage.getAll()));
+        Set<Resume> set = new TreeSet<>(Comparator.comparing(Resume::getName));
+        set.addAll(storage.getAllSorted());
         assertArrayEquals(resumes, set.toArray(new Resume[0]));
         assertSize(3);
     }

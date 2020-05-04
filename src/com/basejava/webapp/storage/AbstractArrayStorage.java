@@ -1,9 +1,12 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.*;
+import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Array based storage for Resumes
@@ -18,17 +21,18 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
-    public Resume[] getAll() {
-        Resume[] resumes = new Resume[size];
-        System.arraycopy(storage, 0, resumes, 0, size);
-        return resumes;
+    public List<Resume> getAllSorted() {
+        return Arrays.stream(storage, 0, size)
+                     .sorted(Comparator.comparing(Resume::getName)
+                                       .thenComparing(Resume::getUuid))
+                     .collect(Collectors.toList());
     }
 
     @Override
     protected void doSave(Resume r, Object index) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("ERROR: Not enough array length " +
-                    "for saving resume!", r.getUuid());
+                    "for saving resume!", r.getName());
         } else {
             insertElement(r, (Integer) index);
             size++;
