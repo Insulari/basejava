@@ -18,28 +18,28 @@ public class MapUuidStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (map.containsKey(searchKey));
+    protected boolean isExist(Object uuid) {
+        return (map.containsKey((String) uuid));
     }
 
     @Override
-    protected void doSave(Resume r, Object searchKey) {
-        map.put((String) searchKey, r);
+    protected void doSave(Resume r, Object uuid) {
+        map.put((String) uuid, r);
     }
 
     @Override
-    protected void doDelete(Object searchKey) {
-        map.remove(searchKey);
+    protected void doDelete(Object uuid) {
+        map.remove((String) uuid);
     }
 
     @Override
-    protected void doUpdate(Resume r, Object searchKey) {
-        map.replace((String) searchKey, r);
+    protected void doUpdate(Resume r, Object uuid) {
+        map.replace((String) uuid, r);
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
-        return map.get(searchKey);
+    protected Resume doGet(Object uuid) {
+        return map.get((String) uuid);
     }
 
     @Override
@@ -48,11 +48,8 @@ public class MapUuidStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        Set<Resume> set = new TreeSet<>(Comparator.comparing(Resume::getName)
-                                                  .thenComparing(Resume::getUuid));
-        set.addAll(map.values());
-        return new ArrayList<>(set);
+    public List<Resume> doCopyAll() {
+        return new ArrayList<>(map.values());
     }
 
     @Override

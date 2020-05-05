@@ -17,7 +17,7 @@ public class AbstractArrayStorageTest extends AbstractStorageTest {
         storage.clear();
         try {
             for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                storage.save(new Resume("uuid" + i));
+                storage.save(new Resume("name" + i));
             }
         } catch (StorageException e) {
             fail("Exception thrown in saving resume: " + e.getUuid());

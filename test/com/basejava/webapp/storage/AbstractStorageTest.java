@@ -107,13 +107,12 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() {
+    public void getAllSorted() {
         Resume[] resumes = new Resume[3];
         resumes[0] = RESUME1;
         resumes[1] = RESUME2;
         resumes[2] = RESUME3;
-        Set<Resume> set = new TreeSet<>(Comparator.comparing(Resume::getName));
-        set.addAll(storage.getAllSorted());
+        Set<Resume> set = new TreeSet<>(storage.getAllSorted());
         assertArrayEquals(resumes, set.toArray(new Resume[0]));
         assertSize(3);
     }

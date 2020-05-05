@@ -18,8 +18,8 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return (map.containsValue(searchKey));
+    protected boolean isExist(Object resume) {
+        return (resume != null);
     }
 
     @Override
@@ -28,8 +28,8 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doDelete(Object searchKey) {
-        Resume r = (Resume) searchKey;
+    protected void doDelete(Object resume) {
+        Resume r = (Resume) resume;
         map.remove(r.getUuid());
     }
 
@@ -39,8 +39,8 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
-        return (Resume) searchKey;
+    protected Resume doGet(Object resume) {
+        return (Resume) resume;
     }
 
     @Override
@@ -49,11 +49,8 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        Set<Resume> set = new TreeSet<>(Comparator.comparing(Resume::getName)
-                                                  .thenComparing(Resume::getUuid));
-        set.addAll(map.values());
-        return new ArrayList<>(set);
+    public List<Resume> doCopyAll() {
+        return new ArrayList<>(map.values());
     }
 
     @Override

@@ -3,9 +3,7 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * List based storage for Resumes
@@ -50,15 +48,14 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void clear() {
-        resumeList.clear();
-        resumeList.trimToSize();
+    protected List<Resume> doCopyAll() {
+        return new ArrayList<>(resumeList);
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        return resumeList.stream().sorted(Comparator.comparing(Resume::getName))
-                         .collect(Collectors.toList());
+    public void clear() {
+        resumeList.clear();
+        resumeList.trimToSize();
     }
 
     @Override
