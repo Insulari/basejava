@@ -9,7 +9,7 @@ import java.util.List;
  * List based storage for Resumes
  */
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     private ArrayList<Resume> resumeList = new ArrayList<>();
 
     @Override
@@ -23,28 +23,28 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
+    protected boolean isExist(Integer searchKey) {
         return (searchKey != null);
     }
 
     @Override
-    protected void doSave(Resume r, Object searchKey) {
+    protected void doSave(Resume r, Integer searchKey) {
         resumeList.add(r);
     }
 
     @Override
-    protected void doDelete(Object searchKey) {
-        resumeList.remove(((Integer) searchKey).intValue());
+    protected void doDelete(Integer searchKey) {
+        resumeList.remove(searchKey.intValue());
     }
 
     @Override
-    protected void doUpdate(Resume r, Object searchKey) {
-        resumeList.set((Integer) searchKey, r);
+    protected void doUpdate(Resume r, Integer searchKey) {
+        resumeList.set(searchKey, r);
     }
 
     @Override
-    protected Resume doGet(Object searchKey) {
-        return resumeList.get((Integer) searchKey);
+    protected Resume doGet(Integer searchKey) {
+        return resumeList.get(searchKey);
     }
 
     @Override

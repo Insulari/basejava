@@ -1,7 +1,6 @@
 package com.basejava.webapp.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -11,6 +10,10 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private final String uuid;
     private final String fullName;
+
+    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+
+    private Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -29,6 +32,22 @@ public class Resume implements Comparable<Resume> {
 
     public String getName() {
         return fullName;
+    }
+
+    public String getContact(ContactType type) {
+        return contacts.get(type);
+    }
+
+    public Section getSection(SectionType type) {
+        return sections.get(type);
+    }
+
+    public void addContacts(Map<ContactType, String> contacts) {
+        this.contacts = contacts;
+    }
+
+    public void addSections(Map<SectionType, Section> sections) {
+        this.sections = sections;
     }
 
     @Override
@@ -51,7 +70,23 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public String toString() {
-        return "| ID: " + uuid + " | Name: " + fullName + " |";
+        StringBuilder strResume = new StringBuilder("| ID: " + uuid + " | Name: " + fullName + " |\n\n");
+        final String LINE =  "__________________________________________________\n";
+        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            strResume.append(entry.getKey().getTitle())
+                     .append(entry.getValue())
+                     .append('\n');
+        }
+        strResume.append(LINE);
+        for (Map.Entry<SectionType, Section> entry : sections.entrySet()
+             ) {
+            strResume.append(entry.getKey().getTitle())
+                     .append(":\n")
+                     .append(entry.getValue())
+                     .append('\n');
+        }
+        strResume.append(LINE);
+        return strResume.toString();
     }
 
     @Override
