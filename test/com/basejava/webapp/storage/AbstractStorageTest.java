@@ -21,18 +21,18 @@ public abstract class AbstractStorageTest {
     private static final String NAME_3 = "Petr3";
     private static final String DUMMY = "dummy";
     private static final String ONE_MORE_NAME = "Dummyr";
-    private static final Resume RESUME1;
-    private static final Resume RESUME2;
-    private static final Resume RESUME3;
+    private static final Resume R1;
+    private static final Resume R2;
+    private static final Resume R3;
     private static final Resume RESUME_DUMMY;
     protected static final Resume ONE_MORE_RESUME;
 
     static {
-        RESUME1 = new Resume(UUID_1, NAME_1);
-        RESUME2 = new Resume(UUID_2, NAME_2);
-        RESUME3 = new Resume(UUID_3, NAME_3);
-        RESUME_DUMMY = new Resume(DUMMY, NAME_1);
-        ONE_MORE_RESUME = new Resume(ONE_MORE_NAME);
+        R1 = ResumeTestData.setAllFields(UUID_1, NAME_1);
+        R2 = ResumeTestData.setAllFields(UUID_2, NAME_2);
+        R3 = ResumeTestData.setAllFields(UUID_3, NAME_3);
+        RESUME_DUMMY = ResumeTestData.setAllFields(DUMMY, NAME_1);
+        ONE_MORE_RESUME = ResumeTestData.setAllFields(new Resume(ONE_MORE_NAME).getUuid(), ONE_MORE_NAME);
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -41,9 +41,9 @@ public abstract class AbstractStorageTest {
 
     @Before
     public void setUp() {
-        storage.save(RESUME1);
-        storage.save(RESUME2);
-        storage.save(RESUME3);
+        storage.save(R1);
+        storage.save(R2);
+        storage.save(R3);
     }
 
     @Test
@@ -75,14 +75,14 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = ExistStorageException.class)
     public void saveExist() {
-        storage.save(RESUME3);
+        storage.save(R3);
     }
 
     @Test
     public void getExist() {
-        assertGet(RESUME3);
-        assertGet(RESUME2);
-        assertGet(RESUME1);
+        assertGet(R3);
+        assertGet(R2);
+        assertGet(R1);
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -109,9 +109,9 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAllSorted() {
         Resume[] resumes = new Resume[3];
-        resumes[0] = RESUME1;
-        resumes[1] = RESUME2;
-        resumes[2] = RESUME3;
+        resumes[0] = R1;
+        resumes[1] = R2;
+        resumes[2] = R3;
         Set<Resume> set = new TreeSet<>(storage.getAllSorted());
         assertArrayEquals(resumes, set.toArray(new Resume[0]));
         assertSize(3);
